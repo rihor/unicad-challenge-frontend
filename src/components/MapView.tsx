@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 
 import {
   GoogleMap,
@@ -23,48 +23,69 @@ const MapView: React.FC<Props> = ({
 }) => {
   const [directionsResult, setDirectionsResult] = useState<null | any>(null)
 
-  const center = {
-    lat: initialPlace.latitude,
-    lng: initialPlace.longitude,
-  }
+  const initialPosition = useMemo(
+    () => ({ lat: initialPlace.latitude, lng: initialPlace.longitude }),
+    [],
+  )
 
-  const directionsCallback = (response: any) => {
+  const directionsCallback = useCallback((response: any) => {
     if (response !== null && response.status === "OK") {
       setDirectionsResult(response)
     }
-  }
+  }, [])
+
+  const googleMapsOptions = useMemo(
+    () => ({
+      fullscreenControl: false,
+      streetViewControl: false,
+      mapTypeControl: false,
+      zoomControl: false,
+    }),
+    [],
+  )
+
+  const mapContainerStyle = useMemo(
+    () => ({
+      height: "100%",
+      width: "100%",
+    }),
+    [],
+  )
+
+  const directionsServicesOptions = useMemo(
+    () => ({
+      destination: `${startLocation.latitude},${startLocation.longitude}`,
+      origin: `${destinationLocation.latitude},${destinationLocation.longitude}`,
+      travelMode: "DRIVING",
+    }),
+    [
+      startLocation.latitude,
+      startLocation.longitude,
+      destinationLocation.latitude,
+      destinationLocation.longitude,
+    ],
+  )
+
+  const directionsRendererOptions = useMemo(
+    () => ({ directions: directionsResult }),
+    [directionsResult],
+  )
 
   return (
     <LoadScript googleMapsApiKey={API_KEY}>
       <GoogleMap
         clickableIcons={false}
-        options={{
-          fullscreenControl: false,
-          streetViewControl: false,
-          mapTypeControl: false,
-          zoomControl: false,
-        }}
-        mapContainerStyle={{
-          height: "100%",
-          width: "100%",
-        }}
+        options={googleMapsOptions}
+        mapContainerStyle={mapContainerStyle}
         zoom={initialPlace.zoom}
-        center={center}>
+        center={initialPosition}>
         <DirectionsService
-          options={{
-            destination: `${startLocation.latitude},${startLocation.longitude}`,
-            origin: `${destinationLocation.latitude},${destinationLocation.longitude}`,
-            travelMode: "DRIVING",
-          }}
+          options={directionsServicesOptions}
           callback={directionsCallback}
         />
 
         {directionsResult !== null && (
-          <DirectionsRenderer
-            options={{
-              directions: directionsResult,
-            }}
-          />
+          <DirectionsRenderer options={directionsRendererOptions} />
         )}
       </GoogleMap>
     </LoadScript>

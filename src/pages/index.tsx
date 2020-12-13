@@ -1,51 +1,59 @@
+import FloatingActionButton from "components/FloatingActionButton"
 import { NextPage } from "next"
+import { useMemo } from "react"
 
+import DeliveryListItem from "../components/DeliveryListItem"
 import MapView from "../components/MapView"
 
 const Home: NextPage = () => {
+  const mapViewArgs = useMemo(
+    () => ({
+      initialPlace: {
+        zoom: 14,
+        latitude: -22.8520714,
+        longitude: -42.0330829,
+      },
+      startLocation: {
+        latitude: -22.917496,
+        longitude: -42.0388765,
+      },
+      destinationLocation: {
+        latitude: -22.8863015,
+        longitude: -42.0406875,
+      },
+    }),
+    [],
+  )
+
   return (
-    <div className="relative w-full h-screen bg-red-200">
-      <main className="w-full h-full" role="main?">
-        <MapView
-          initialPlace={{
-            zoom: 14,
-            latitude: -22.8520714,
-            longitude: -42.0330829,
-          }}
-          startLocation={{
-            latitude: -22.917496,
-            longitude: -42.0388765,
-          }}
-          destinationLocation={{
-            latitude: -22.8863015,
-            longitude: -42.0406875,
-          }}
-        />
-        <div className="" role="container-list"></div>
+    <div className="w-full h-screen">
+      <main className="w-full h-screen">
+        <div className="h-2/6">
+          <MapView
+            initialPlace={mapViewArgs.initialPlace}
+            startLocation={mapViewArgs.startLocation}
+            destinationLocation={mapViewArgs.destinationLocation}
+          />
+        </div>
+        <div className="h-4/6 bg-yellow-100">
+          <ul className="w-full h-full pt-6 flex flex-col items-center space-y-4">
+            <DeliveryListItem />
+          </ul>
+        </div>
       </main>
-      <div className="" role="background-selected-delivery">
-        <div className="" role="container-of-selected-delivery"></div>
+      <div
+        className="fixed hidden justify-center items-end top-2/3 left-0 h-2/6 w-screen"
+        role="background-selected-delivery">
+        <div className="bg-red-200 w-full h-full">
+          <ul className="w-full h-full pt-6 flex flex-col items-center space-y-4">
+            <DeliveryListItem />
+          </ul>
+        </div>
       </div>
       <div className="" role="background-modal-create-delivery">
         <div className="" role="container-of-modal-create-delivery"></div>
       </div>
-      <button
-        className="fixed flex items-center justify-center bottom-12 right-12 w-16 h-16 bg-green-500 z-10 rounded-full"
-        role="FAB">
-        <svg
-          className="w-12 h-12 text-yellow-100"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-          />
-        </svg>
-      </button>
+      <FloatingActionButton />
     </div>
   )
 }
