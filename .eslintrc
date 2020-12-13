@@ -14,7 +14,8 @@
     "plugin:import/warnings",
     "plugin:import/typescript",
     "prettier/standard",
-    "prettier/react"
+    "prettier/react",
+    "plugin:react-perf/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -24,7 +25,13 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "prettier", "import"],
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "prettier",
+    "import",
+    "react-perf"
+  ],
   "rules": {
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
@@ -34,6 +41,12 @@
     "react/prop-types": "off",
     "no-use-before-define": "off",
     "multiline-ternary": ["error", "never"],
+    "react-perf/jsx-no-new-object-as-prop": [
+      "error",
+      {
+        "nativeAllowList": "all"
+      }
+    ],
     "@typescript-eslint/no-use-before-define": ["error"],
     "import/order": [
       "error",
