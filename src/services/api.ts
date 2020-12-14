@@ -1,5 +1,16 @@
 import axios, { AxiosInstance } from "axios"
 
+interface ApiError {
+  status: number
+  data: {
+    errors: Array<{
+      rule: string
+      field: string
+      message: string
+    }>
+  }
+}
+
 class Api {
   private axios: AxiosInstance
 
@@ -9,16 +20,24 @@ class Api {
     })
   }
 
-  async get<T>(resource: string) {
-    const response = await this.axios.get<T>(resource)
+  private getErrorMessage(error: ApiError) {
+    return error.data.errors.map((err) => `${err.field}: ${err.message}`)
+  }
 
-    return response
+  async get<T>(resource: string) {
+    try {
+      return await this.axios.get<T>(resource)
+    } catch (responseError) {
+      this.getErrorMessage(responseError.response)
+    }
   }
 
   async post<T>(resource: string, data: any) {
-    const response = await this.axios.post<T>(resource, { data })
-
-    return response
+    try {
+      return await this.axios.post<T>(resource, data)
+    } catch (responseError) {
+      console.log(this.getErrorMessage(responseError.response))
+    }
   }
 }
 
