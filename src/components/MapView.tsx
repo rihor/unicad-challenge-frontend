@@ -12,15 +12,10 @@ const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY || ""
 
 interface Props extends GoogleMapProps {
   initialPlace: { latitude: number; longitude: number; zoom: number }
-  startLocation: { latitude: number; longitude: number }
-  destinationLocation: { latitude: number; longitude: number }
+  delivery: Delivery | null
 }
 
-const MapView: React.FC<Props> = ({
-  initialPlace,
-  startLocation,
-  destinationLocation,
-}) => {
+const MapView: React.FC<Props> = ({ initialPlace, delivery }) => {
   const [directionsResult, setDirectionsResult] = useState<null | any>(null)
 
   const initialPosition = useMemo(
@@ -54,16 +49,11 @@ const MapView: React.FC<Props> = ({
 
   const directionsServicesOptions = useMemo(
     () => ({
-      destination: `${startLocation.latitude},${startLocation.longitude}`,
-      origin: `${destinationLocation.latitude},${destinationLocation.longitude}`,
+      destination: delivery?.destination,
+      origin: delivery?.start,
       travelMode: "DRIVING",
     }),
-    [
-      startLocation.latitude,
-      startLocation.longitude,
-      destinationLocation.latitude,
-      destinationLocation.longitude,
-    ],
+    [delivery],
   )
 
   const directionsRendererOptions = useMemo(
@@ -79,12 +69,14 @@ const MapView: React.FC<Props> = ({
         mapContainerStyle={mapContainerStyle}
         zoom={initialPlace.zoom}
         center={initialPosition}>
-        <DirectionsService
-          options={directionsServicesOptions}
-          callback={directionsCallback}
-        />
+        {delivery && (
+          <DirectionsService
+            options={directionsServicesOptions}
+            callback={directionsCallback}
+          />
+        )}
 
-        {directionsResult !== null && (
+        {directionsResult !== null && delivery && (
           <DirectionsRenderer options={directionsRendererOptions} />
         )}
       </GoogleMap>

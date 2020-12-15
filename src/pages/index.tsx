@@ -20,23 +20,32 @@ const Home: NextPage = () => {
 
   const router = useRouter()
 
+  const [initialPlace] = useState(() => {
+    if (globalThis.navigator && "geolocation" in globalThis.navigator) {
+      globalThis.navigator.geolocation.getCurrentPosition((position) => {
+        return {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }
+      })
+    }
+
+    // center of São Paulo
+    return {
+      latitude: -23.5475,
+      longitude: -46.63611,
+    }
+  })
+
   const mapViewArgs = useMemo(
     () => ({
       initialPlace: {
-        zoom: 14,
-        latitude: -22.8520714,
-        longitude: -42.0330829,
-      },
-      startLocation: {
-        latitude: -22.917496,
-        longitude: -42.0388765,
-      },
-      destinationLocation: {
-        latitude: -22.8863015,
-        longitude: -42.0406875,
+        zoom: 3,
+        latitude: initialPlace.latitude,
+        longitude: initialPlace.longitude,
       },
     }),
-    [],
+    [initialPlace],
   )
 
   const loadDeliveries = useCallback(async () => {
@@ -75,8 +84,7 @@ const Home: NextPage = () => {
           className={`${selectedDelivery ? "h-4/6" : "h-2/6"} transition-all`}>
           <MapView
             initialPlace={mapViewArgs.initialPlace}
-            startLocation={mapViewArgs.startLocation}
-            destinationLocation={mapViewArgs.destinationLocation}
+            delivery={selectedDelivery}
           />
         </div>
         <div className="h-4/6 bg-yellow-200 overflow-y-auto">
