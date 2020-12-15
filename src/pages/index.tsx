@@ -1,3 +1,4 @@
+import EmptyListDisplay from "components/EmptyListDisplay"
 import FloatingActionButton from "components/FloatingActionButton"
 import SelectedDelivery from "components/SelectedDelivery"
 import Spinner from "components/Spinner"
@@ -80,7 +81,7 @@ const Home: NextPage = () => {
           <ul className="w-full h-full mb-72 pt-6 flex flex-col items-center space-y-4">
             {!isLoading ? (
               isEmpty ? (
-                <div>Vazio...</div>
+                <EmptyListDisplay />
               ) : (
                 deliveries.map((delivery) => (
                   <DeliveryListItem
