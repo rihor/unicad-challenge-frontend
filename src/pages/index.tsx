@@ -87,8 +87,11 @@ const Home: NextPage = () => {
             delivery={selectedDelivery}
           />
         </div>
-        <div className="h-4/6 bg-yellow-200 overflow-y-auto">
-          <ul className="w-full h-full mb-72 pt-6 flex flex-col items-center space-y-4">
+        <div
+          className={`${
+            selectedDelivery ? "hidden" : "block"
+          } h-4/6 bg-yellow-200 overflow-y-auto`}>
+          <ul className="w-full mb-28 pt-6 flex flex-col items-center space-y-4">
             {!isLoading ? (
               isEmpty ? (
                 <EmptyListDisplay />
@@ -111,7 +114,7 @@ const Home: NextPage = () => {
         <div
           className={`fixed ${
             selectedDelivery ? "flex" : "hidden"
-          } justify-center items-end top-2/3 left-0 h-2/6 w-screen`}
+          } h-2/6 w-screen justify-center items-end top-2/3 left-0 `}
           role="background-selected-delivery">
           <div className="bg-red-200 w-full h-full">
             <SelectedDelivery
