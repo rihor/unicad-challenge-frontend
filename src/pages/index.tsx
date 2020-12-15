@@ -1,11 +1,23 @@
 import FloatingActionButton from "components/FloatingActionButton"
+import SelectedDelivery from "components/SelectedDelivery"
 import { NextPage } from "next"
-import { useMemo } from "react"
+import { useRouter } from "next/router"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import DeliveryListItem from "../components/DeliveryListItem"
 import MapView from "../components/MapView"
+import api from "../services/api"
 
-const Home: NextPage = () => {
+interface Props {
+  staticDeliveries: Array<Delivery>
+}
+
+const Home: NextPage<Props> = ({ staticDeliveries }) => {
+  const [deliveries, setDeliveries] = useState(staticDeliveries || [])
+  const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(
+    null,
+  )
+
   const mapViewArgs = useMemo(
     () => ({
       initialPlace: {
@@ -25,35 +37,67 @@ const Home: NextPage = () => {
     [],
   )
 
+  const loadDeliveries = useCallback(async () => {
+    const response = await api.get<Array<Delivery>>("/deliveries")
+
+    if (!response?.data) {
+      return
+    }
+
+    setDeliveries(response.data)
+  }, [])
+
+  function handleUnselectDelivery() {
+    setSelectedDelivery(null)
+  }
+
+  useEffect(() => {
+    loadDeliveries()
+  }, [])
+
+  const handleFABClick = useCallback(() => {
+    useRouter().push("/create")
+  }, [])
+
   return (
     <div className="w-full h-screen">
       <main className="w-full h-screen">
-        <div className="h-2/6">
+        <div
+          className={`${selectedDelivery ? "h-4/6" : "h-2/6"} transition-all`}>
           <MapView
             initialPlace={mapViewArgs.initialPlace}
             startLocation={mapViewArgs.startLocation}
             destinationLocation={mapViewArgs.destinationLocation}
           />
         </div>
-        <div className="h-4/6 bg-yellow-100">
-          <ul className="w-full h-full pt-6 flex flex-col items-center space-y-4">
-            <DeliveryListItem />
+        <div className="h-4/6 bg-yellow-100 overflow-y-auto">
+          <ul className="w-full h-full mb-72 pt-6 flex flex-col items-center space-y-4">
+            {deliveries.map((delivery) => (
+              <DeliveryListItem
+                key={delivery.id}
+                delivery={delivery}
+                setDelivery={setSelectedDelivery}
+              />
+            ))}
           </ul>
         </div>
       </main>
-      <div
-        className="fixed hidden justify-center items-end top-2/3 left-0 h-2/6 w-screen"
-        role="background-selected-delivery">
-        <div className="bg-red-200 w-full h-full">
-          <ul className="w-full h-full pt-6 flex flex-col items-center space-y-4">
-            <DeliveryListItem />
-          </ul>
+      {selectedDelivery && (
+        <div
+          className={`fixed ${
+            selectedDelivery ? "flex" : "hidden"
+          } justify-center items-end top-2/3 left-0 h-2/6 w-screen`}
+          role="background-selected-delivery">
+          <div className="bg-red-200 w-full h-full">
+            <SelectedDelivery
+              delivery={selectedDelivery}
+              unselectDelivery={handleUnselectDelivery}
+            />
+          </div>
         </div>
-      </div>
-      <div className="" role="background-modal-create-delivery">
-        <div className="" role="container-of-modal-create-delivery"></div>
-      </div>
-      <FloatingActionButton />
+      )}
+
+      <FloatingActionButton onClick={handleFABClick} />
     </div>
   )
 }

@@ -1,8 +1,13 @@
-import { FC } from "react"
+import { FC, MouseEvent } from "react"
 
-const FloatingActionButton: FC = () => {
+interface Props {
+  onClick: (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void
+}
+
+const FloatingActionButton: FC<Props> = ({ onClick }) => {
   return (
     <button
+      onClick={onClick}
       className="fixed flex items-center justify-center bottom-12 right-12 w-16 h-16 bg-green-500 z-10 rounded-full"
       role="FAB">
       <svg

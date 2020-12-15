@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from "axios"
 
 interface ApiError {
-  status: number
-  data: {
+  status?: number
+  data?: {
     errors: Array<{
       rule: string
       field: string
@@ -21,7 +21,15 @@ class Api {
   }
 
   private getErrorMessage(error: ApiError) {
-    return error.data.errors.map((err) => `${err.field}: ${err.message}`)
+    const errors = error?.data?.errors.map((err) => ({
+      message: err.message,
+      field: err.field,
+    }))
+
+    return {
+      status: error.status,
+      errors,
+    }
   }
 
   async get<T>(resource: string) {
