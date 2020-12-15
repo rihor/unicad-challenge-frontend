@@ -1,5 +1,6 @@
 import FloatingActionButton from "components/FloatingActionButton"
 import SelectedDelivery from "components/SelectedDelivery"
+import Spinner from "components/Spinner"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
 import { useCallback, useEffect, useMemo, useState } from "react"
@@ -8,12 +9,10 @@ import DeliveryListItem from "../components/DeliveryListItem"
 import MapView from "../components/MapView"
 import api from "../services/api"
 
-interface Props {
-  staticDeliveries: Array<Delivery>
-}
-
-const Home: NextPage<Props> = ({ staticDeliveries }) => {
-  const [deliveries, setDeliveries] = useState(staticDeliveries || [])
+const Home: NextPage = () => {
+  const [isEmpty, setIsEmpty] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [deliveries, setDeliveries] = useState<Array<Delivery>>([])
   const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(
     null,
   )
@@ -38,13 +37,20 @@ const Home: NextPage<Props> = ({ staticDeliveries }) => {
   )
 
   const loadDeliveries = useCallback(async () => {
+    setIsLoading(true)
+    setIsEmpty(false)
     const response = await api.get<Array<Delivery>>("/deliveries")
 
     if (!response?.data) {
       return
     }
 
+    if (Array.isArray(response.data) && response.data.length === 0) {
+      setIsEmpty(true)
+    }
+
     setDeliveries(response.data)
+    setIsLoading(false)
   }, [])
 
   function handleUnselectDelivery() {
@@ -72,13 +78,21 @@ const Home: NextPage<Props> = ({ staticDeliveries }) => {
         </div>
         <div className="h-4/6 bg-yellow-100 overflow-y-auto">
           <ul className="w-full h-full mb-72 pt-6 flex flex-col items-center space-y-4">
-            {deliveries.map((delivery) => (
-              <DeliveryListItem
-                key={delivery.id}
-                delivery={delivery}
-                setDelivery={setSelectedDelivery}
-              />
-            ))}
+            {!isLoading ? (
+              isEmpty ? (
+                <div>Vazio...</div>
+              ) : (
+                deliveries.map((delivery) => (
+                  <DeliveryListItem
+                    key={delivery.id}
+                    delivery={delivery}
+                    setDelivery={setSelectedDelivery}
+                  />
+                ))
+              )
+            ) : (
+              <Spinner />
+            )}
           </ul>
         </div>
       </main>
