@@ -1,13 +1,13 @@
-import EmptyListDisplay from "components/EmptyListDisplay"
-import FloatingActionButton from "components/FloatingActionButton"
-import SelectedDelivery from "components/SelectedDelivery"
-import Spinner from "components/Spinner"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 import DeliveryListItem from "../components/DeliveryListItem"
+import EmptyListDisplay from "../components/EmptyListDisplay"
+import FloatingActionButton from "../components/FloatingActionButton"
 import MapView from "../components/MapView"
+import SelectedDelivery from "../components/SelectedDelivery"
+import Spinner from "../components/Spinner"
 import api from "../services/api"
 
 const Home: NextPage = () => {
@@ -17,6 +17,8 @@ const Home: NextPage = () => {
   const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(
     null,
   )
+
+  const router = useRouter()
 
   const mapViewArgs = useMemo(
     () => ({
@@ -63,7 +65,7 @@ const Home: NextPage = () => {
   }, [])
 
   const handleFABClick = useCallback(() => {
-    useRouter().push("/create")
+    router.push("/create")
   }, [])
 
   return (
