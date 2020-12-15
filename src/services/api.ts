@@ -21,6 +21,10 @@ class Api {
   }
 
   private getErrorMessage(error: ApiError) {
+    if (!error?.status) {
+      return "No connection with server right now"
+    }
+
     const errors = error?.data?.errors.map((err) => ({
       message: err.message,
       field: err.field,
