@@ -11,6 +11,7 @@
     "@hookform/resolvers": "^1.1.2",
     "@react-google-maps/api": "^2.0.2",
     "axios": "^0.21.0",
+    "dayjs": "^1.9.7",
     "next": "10.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
