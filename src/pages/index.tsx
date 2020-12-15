@@ -76,7 +76,7 @@ const Home: NextPage = () => {
             destinationLocation={mapViewArgs.destinationLocation}
           />
         </div>
-        <div className="h-4/6 bg-yellow-100 overflow-y-auto">
+        <div className="h-4/6 bg-yellow-200 overflow-y-auto">
           <ul className="w-full h-full mb-72 pt-6 flex flex-col items-center space-y-4">
             {!isLoading ? (
               isEmpty ? (
