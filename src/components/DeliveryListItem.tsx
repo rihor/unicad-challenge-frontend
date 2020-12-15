@@ -1,4 +1,5 @@
-import { FC } from "react"
+import dayjs from "dayjs"
+import { FC, useMemo } from "react"
 
 interface Props {
   delivery: Delivery
@@ -6,6 +7,11 @@ interface Props {
 }
 
 const DeliveryListItem: FC<Props> = ({ delivery, setDelivery }) => {
+  const formattedDate = useMemo(
+    () => dayjs(delivery.date).format("hh:mm[h] DD/MM/YYYY"),
+    [],
+  )
+
   function handleSelect() {
     setDelivery(delivery)
   }
@@ -37,7 +43,7 @@ const DeliveryListItem: FC<Props> = ({ delivery, setDelivery }) => {
         <h2 className="font-semibold">{delivery.client_name}</h2>
 
         <div>
-          <i>{delivery.date}</i>
+          <i>{formattedDate}</i>
         </div>
       </div>
     </li>
