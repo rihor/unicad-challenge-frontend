@@ -112,6 +112,7 @@ const Home: NextPage = () => {
       </main>
       {selectedDelivery && (
         <div
+          data-test="selected-delivery-container"
           className={`fixed ${
             selectedDelivery ? "flex" : "hidden"
           } h-2/6 w-screen justify-center items-end top-2/3 left-0 `}

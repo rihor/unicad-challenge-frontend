@@ -94,6 +94,7 @@ const CreateDeliveryPage: NextPage = () => {
               </FormInput>
 
               <button
+                data-test="form-button"
                 type="submit"
                 className="py-3 px-14 flex items-center rounded bg-green-500 text-xl font-semibold text-white focus:outline-none focus:ring-2 focus:ring-green-200 transition-all">
                 Criar

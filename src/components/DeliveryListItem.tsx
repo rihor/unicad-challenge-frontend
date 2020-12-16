@@ -18,6 +18,7 @@ const DeliveryListItem: FC<Props> = ({ delivery, setDelivery }) => {
 
   return (
     <li
+      data-test={`delivery-item-${delivery.id}`}
       onClick={handleSelect}
       role="article"
       className="w-5/6 p-4 rounded bg-yellow-50 text-yellow-900 cursor-pointer">

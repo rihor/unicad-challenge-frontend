@@ -62,7 +62,7 @@ const MapView: React.FC<Props> = ({ initialPlace, delivery }) => {
   )
 
   return (
-    <LoadScript googleMapsApiKey={API_KEY}>
+    <LoadScript data-test="google-map" googleMapsApiKey={API_KEY}>
       <GoogleMap
         clickableIcons={false}
         options={googleMapsOptions}

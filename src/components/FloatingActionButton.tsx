@@ -7,6 +7,7 @@ interface Props {
 const FloatingActionButton: FC<Props> = ({ onClick }) => {
   return (
     <button
+      data-test="fab-create-delivery"
       onClick={onClick}
       className="fixed flex items-center justify-center bottom-8 right-8 w-16 h-16 bg-green-500 z-10 rounded-full focus:outline-none"
       role="FAB">

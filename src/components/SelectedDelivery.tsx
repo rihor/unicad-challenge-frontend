@@ -43,6 +43,7 @@ const SelectedDelivery: FC<Props> = ({ delivery, unselectDelivery }) => {
       </div>
 
       <button
+        data-test="unselect-delivery"
         type="submit"
         className="absolute flex items-center justify-center bottom-8 left-8 w-16 h-16 bg-red-200 z-10 rounded-full focus:outline-none"
         onClick={unselectDelivery}>

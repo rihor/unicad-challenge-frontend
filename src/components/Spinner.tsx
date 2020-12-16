@@ -1,5 +1,5 @@
 const Spinner: React.FC = () => (
-  <div className="transform -rotate-180 animate-spin">
+  <div data-test="load-spinner" className="transform -rotate-180 animate-spin">
     <svg
       className="flex-none h-32 w-32 animate-pulse text-green-600"
       xmlns="http://www.w3.org/2000/svg"
